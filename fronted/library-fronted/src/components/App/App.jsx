@@ -13,7 +13,7 @@ function App() {
   }, []);
 
   return (
-    <div>
+    <div class="wrapper">
       <h1>Light Feather</h1>
       <h2>Library</h2>
       <div className="wrapper"><BookList books={books} /></div>
