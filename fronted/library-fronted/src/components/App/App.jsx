@@ -5,6 +5,7 @@ import BookList from './../BookList/BookList'
 function App() {
   const [books, setBooks] = useState([]);
   const [genres, setGenres] = useState([]);
+  const [selectedGenre, setSelectedGenre] = useState(null);
 
   useEffect(() => {
     fetch("http://localhost:3000/")
@@ -17,6 +18,10 @@ function App() {
       .then((data) => setGenres(data))
       .catch((err) => console.error("Error while retrieving species: ", err));
   }, [])
+
+  const filteredBooks = selectedGenre
+    ? books.filter(book => book.genre === selectedGenre)
+    : books;
 
   return (
     <div className="wrapper">
@@ -59,12 +64,14 @@ function App() {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  Genre
+                  {selectedGenre || "Genre"}
                 </button>
                 <ul className="dropdown-menu">
                   {genres.map((genre, id) => (
                     <li key={id}>
-                      <a className="dropdown-item" href="#">{genre.genre}</a>
+                      <a className="dropdown-item" href="#" onClick={() => setSelectedGenre(genre.genre)}>
+                        {genre.genre}
+                      </a>
                     </li>
                   ))}
                 </ul>
@@ -81,7 +88,7 @@ function App() {
         </div>
       </nav>
 
-      <div><BookList books={books} /></div>
+      <div><BookList books={filteredBooks} /></div>
     </div>
   );
 }
