@@ -6,7 +6,7 @@ function BookCard({ book }) {
   return (
     <div className="book-card">
       <img src={bookCoverURL} alt={`Cover book: ${book.title}`} />
-      <h3>{book.title}</h3>
+      <h4>{book.title}</h4>
       <p><strong>{book.author}</strong></p>
     </div>
   );

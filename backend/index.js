@@ -45,6 +45,21 @@ app.get("/genres", async (req, res ) => {
   }
 })
 
+app.get("/books", async (req, res) => {
+  const search = req.query.search || "";
+
+  try {
+    const result = await db.query(
+      `SELECT * FROM books WHERE title ILIKE $1 OR author ILIKE $2`,
+      [`%${search}%`, `%${search}%`]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
