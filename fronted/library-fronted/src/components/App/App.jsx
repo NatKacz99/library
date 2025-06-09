@@ -4,13 +4,19 @@ import BookList from './../BookList/BookList'
 
 function App() {
   const [books, setBooks] = useState([]);
+  const [genres, setGenres] = useState([]);
 
   useEffect(() => {
     fetch("http://localhost:3000/")
       .then((res) => res.json())
       .then((data) => setBooks(data))
-      .catch((err) => console.error("Błąd:", err));
-  }, []);
+      .catch((err) => console.error("Error:", err));
+
+    fetch("http://localhost:3000/genres")
+      .then((res) => res.json())
+      .then((data) => setGenres(data))
+      .catch((err) => console.error("Error while retrieving species: ", err));
+  }, [])
 
   return (
     <div className="wrapper">
@@ -30,7 +36,6 @@ function App() {
           </button>
 
           <div className="collapse navbar-collapse justify-content-between" id="navbarContent">
-            {/* LEWA STRONA */}
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
                 <a className="nav-link text-dark" href="#">Sign Up</a>
@@ -46,7 +51,6 @@ function App() {
               </li>
             </ul>
 
-            {/* PRAWA STRONA */}
             <form className="d-flex align-items-center gap-2" role="search">
               <div className="dropdown">
                 <button
@@ -58,11 +62,11 @@ function App() {
                   Genre
                 </button>
                 <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">Fantasy</a></li>
-                  <li><a className="dropdown-item" href="#">Science Fiction</a></li>
-                  <li><a className="dropdown-item" href="#">Romance</a></li>
-                  <li><a className="dropdown-item" href="#">Non-fiction</a></li>
-                  <li><a className="dropdown-item" href="#">Other</a></li>
+                  {genres.map((genre, id) => (
+                    <li key={id}>
+                      <a className="dropdown-item" href="#">{genre.genre}</a>
+                    </li>
+                  ))}
                 </ul>
               </div>
 

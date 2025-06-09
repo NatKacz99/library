@@ -7,6 +7,7 @@ const port = 3000;
 
 import cors from 'cors';
 app.use(cors());
+app.use(express.json());
 
 const db = new pg.Client({
   user: "postgres",
@@ -28,6 +29,16 @@ app.get("/", async (req, res) => {
   try{
     const books = await selectAllBooks();
     res.json(books);
+  } catch{
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+})
+
+app.get("/genres", async (req, res ) => {
+  try{
+    const genres = await db.query('SELECT DISTINCT genre FROM books');
+    res.json(genres.rows)
   } catch{
     console.error(err.message);
     res.status(500).send('Server error');
