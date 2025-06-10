@@ -17,7 +17,7 @@ function SignUp() {
               <input
                 type="text"
                 className="form-control"
-                id="floatingInput"
+                id="name"
                 placeholder="name"
               />
               <label htmlFor="floatingInput">Username</label>
@@ -26,7 +26,7 @@ function SignUp() {
               <input
                 type="email"
                 className="form-control"
-                id="floatingInput"
+                id="email"
                 placeholder="name@example.com"
               />
               <label htmlFor="floatingInput">Email address</label>
@@ -35,7 +35,7 @@ function SignUp() {
               <input
                 type="password"
                 className="form-control"
-                id="floatingPassword"
+                id="password"
                 placeholder="Password"
               />
               <label htmlFor="floatingPassword">Password</label>
@@ -44,7 +44,7 @@ function SignUp() {
               <input
                 type="password"
                 className="form-control"
-                id="floatingPassword"
+                id="repeatPassword"
                 placeholder="Password"
               />
               <label htmlFor="floatingPassword">Repeat password</label>
