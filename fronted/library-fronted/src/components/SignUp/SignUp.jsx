@@ -114,7 +114,7 @@ function SignUp() {
             </button>
           </form>
           {message && messageType !== 'success' && (
-           <div className="alert alert-danger" role="alert">
+            <div className="alert alert-danger" role="alert">
               {message}
             </div>
           )}
@@ -124,7 +124,17 @@ function SignUp() {
               You can now <Link to="/login">sign in to your account</Link>.
             </div>
           )}
+
+          <div className="mt-2">
+            <div className="card-body text-center">
+              <a className="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2" href="http://localhost:3000/auth/google" role="button">
+                <i className="fab fa-google"></i>
+                Sign Up with Google
+              </a>
+            </div>
+          </div>
         </main>
+
       </div>
     </div>
   );
