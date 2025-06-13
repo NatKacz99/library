@@ -4,6 +4,7 @@ import BookList from './../BookList/BookList';
 import NavbarMain from './../Navbar/NavbarMain';
 import Navbar from './../Navbar/Navbar';
 import SignUp from './../SignUp/SignUp';
+import Login from './../Login/Login';
 import { Route, Routes } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
@@ -12,6 +13,7 @@ function App() {
   const [genres, setGenres] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [token, setToken] = useState();
 
   useEffect(() => {
     fetch("http://localhost:3000/")
@@ -44,6 +46,8 @@ function App() {
     : books;
   const location = useLocation();
 
+  
+
   return (
     <div className="wrapper">
 
@@ -58,6 +62,7 @@ function App() {
       <Routes>
         <Route path="/" element={<BookList books={filteredBooks} />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<Login setToken={setToken} />} />
       </Routes>
     </div>
   );

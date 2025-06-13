@@ -40,7 +40,7 @@ function NavbarMain({
               <Link className="nav-link text-dark" to="/signup">Sign Up</Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link text-dark" href="#">Sign In</a>
+              <a className="nav-link text-dark" href="/login">Sign In</a>
             </li>
             <li className="nav-item">
               <a className="nav-link text-dark" href="#">My Account</a>

@@ -4,26 +4,35 @@ import pg from "pg";
 import bcrypt from 'bcrypt';
 import env from "dotenv";
 import passport from "passport";
+import { Strategy } from "passport-local";
 import session from "express-session";
-import GoogleStrategy from "passport-google-oauth2"
+import GoogleStrategy from "passport-google-oauth2";
+import cors from 'cors';
 
 env.config();
 
 const app = express();
 const port = 3000;
 const saltRounds = 10;
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.use(cors({
+  origin: 'http://localhost:5173',   
+  credentials: true                  
+}));
 
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
+    cookie: {
+    secure: false, 
+    maxAge: 24 * 60 * 60 * 1000 
+  }
   })
 );
-
-import cors from 'cors';
-app.use(cors());
-app.use(express.json());
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -37,7 +46,6 @@ const db = new pg.Client({
 });
 db.connect();
 
-app.use(bodyParser.urlencoded({ extended: true }));
 
 async function selectAllBooks() {
   const result = await db.query("SELECT * FROM books");
@@ -90,6 +98,28 @@ app.get("/auth/google/callback",
   }
 );
 
+app.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      console.error("Authentication error:", err);
+      return next(err);
+    }
+    if (!user) {
+      console.warn("Authentication failed:", info);
+      return res.status(401).json({ success: false, message: info?.message || "Invalid credentials" });
+    }
+
+    req.logIn(user, (err) => {
+      if (err) {
+        console.error("Login error:", err);
+        return next(err);
+      }
+      return res.json({ success: true, user: { id: user.id, email: user.email } });
+    });
+  })(req, res, next);
+});
+
+
 app.post("/signup", async (req, res) => {
   const { username, email, password, confirmPassword } = req.body;
   console.log(username);
@@ -110,12 +140,20 @@ app.post("/signup", async (req, res) => {
       return res.status(400).json({ success: false, message: 'Passwords are not the same.' });
     }
 
-    const checkResult = await db.query("SELECT * FROM users WHERE email = $1", [
+    const checkResultEmail = await db.query("SELECT * FROM users WHERE email = $1", [
       email
     ]);
 
-    if (checkResult.rows.length > 0) {
+    const checkResultUsername = await db.query("SELECT * FROM users WHERE name = $1", [
+      username
+    ]);
+
+    if (checkResultEmail.rows.length > 0) {
       return res.status(400).json({ success: false, message: 'Email already exists. Try log in.' })
+    }
+
+    if (checkResultUsername.rows.length > 0) {
+      return res.status(400).json({ success: false, message: 'Username already exist. Choose a different nick.' })
     }
 
     bcrypt.hash(password, saltRounds, async (err, hash) => {
@@ -133,6 +171,36 @@ app.post("/signup", async (req, res) => {
   }
 }
 )
+
+passport.use(
+  new Strategy(async function verify(username, password, cb) {
+    try {
+      const result = await db.query("SELECT * FROM users WHERE name = $1", [
+        username,
+      ]);
+      if (result.rows.length > 0) {
+        const user = result.rows[0];
+        const storedHashedPassword = user.password;
+        bcrypt.compare(password, storedHashedPassword, (err, isMatch) => {
+          if (err) {
+            console.error("Error comparing passwords:", err);
+            return cb(err);
+          }
+          if (isMatch) {
+            return cb(null, user);
+          } else {
+            return cb(null, false, { message: "Invalid password" });
+          }
+        });
+      } else {
+        return cb(null, false, { message: "User not found" });
+      }
+    } catch (err) {
+      console.log(err);
+      return cb(err);
+    }
+  })
+);
 
 passport.use("google", new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
