@@ -22,6 +22,7 @@ function MyAccount() {
         <h2>
           Your rentals
         </h2>
+        <p>The loan period for all books is 30 days</p>
       </div>
       <div className="personal-data">
         <h2>Your personal data</h2>

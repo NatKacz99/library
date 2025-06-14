@@ -46,6 +46,7 @@ function BookDetails() {
                 </span>
               ))}
             </div>
+            <p>Rate the book</p>
           </div>
 
           <div>
