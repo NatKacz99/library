@@ -131,7 +131,7 @@ app.post("/login", (req, res, next) => {
         console.error("Login error:", err);
         return next(err);
       }
-      return res.json({ success: true, user: { id: user.id, email: user.email } });
+      return res.json({ success: true, user: { id: user.id, email: user.email, name: user.name } });
     });
   })(req, res, next);
 });

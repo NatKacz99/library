@@ -5,9 +5,10 @@ import NavbarMain from './../Navbar/NavbarMain';
 import Navbar from './../Navbar/Navbar';
 import SignUp from './../SignUp/SignUp';
 import Login from './../Login/Login';
+import MyAccount from './../MyAccount/MyAccount';
 import BookDetails from './../BookDetails/BookDetails';
-import { Route, Routes } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
+
 
 function App() {
   const [books, setBooks] = useState([]);
@@ -47,7 +48,7 @@ function App() {
     : books;
   const location = useLocation();
 
-  
+
 
   return (
     <div className="wrapper">
@@ -65,6 +66,12 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login setToken={setToken} />} />
         <Route path="/details/:isbn" element={<BookDetails />} />
+        <Route
+          path="/account"
+          element={token ? <MyAccount userName={token.name} /> : <Navigate to="/login" replace />}
+        />
+
+        <Route path="/account/*" element={<Navigate to="/login" replace />} />
       </Routes>
     </div>
   );

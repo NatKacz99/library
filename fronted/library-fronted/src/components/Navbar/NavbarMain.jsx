@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import SearchBar from '../SearchBar/SearchBar';
 import { Link } from 'react-router-dom';
 import featherIcon from '../../assets/feather.svg';
@@ -11,6 +11,15 @@ function NavbarMain({
   genres,
   searchTerm
 }) {
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const storedName = localStorage.getItem("name"); 
+    if (storedName) {
+      setUserName(storedName);
+    }
+  }, []);
+
   return (
     <nav className="navbar navbar-expand-lg bg-white border-bottom">
       <div className="container-fluid">
@@ -41,10 +50,10 @@ function NavbarMain({
               <Link className="nav-link text-dark" to="/signup">Sign Up</Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link text-dark" href="/login">Sign In</a>
+              <Link className="nav-link text-dark" to="/login">Sign In</Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link text-dark" href="#">My Account</a>
+              <Link className="nav-link text-dark" to="/account">My account</Link>
             </li>
             <li className="nav-item">
               <a className="nav-link text-dark" href="#">Events</a>

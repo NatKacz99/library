@@ -1,0 +1,51 @@
+.wrapper{
+  display: flex;
+  flex-direction: column;
+}
+
+.rentals{
+  background-color: white;
+  width: 50%;
+  border-radius: 15px;
+  margin: 18px auto
+}
+
+.personal-data{
+  background-color: white;
+  width: 50%;
+  border-radius: 15px;
+  margin: 18px auto
+}
+
+h2{
+  text-align: center;
+}
+
+.userData{
+  display: flex;
+  flex-direction: row;
+}
+
+.icon-edit{
+  margin-left: 5px;
+}
+
+.edit-password{
+  color: blue
+}
+
+.edit-password:hover{
+  cursor: pointer;
+}
+
+.buttons{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+button{ 
+  width: 100px
+}
+
