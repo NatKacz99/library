@@ -5,6 +5,7 @@ import NavbarMain from './../Navbar/NavbarMain';
 import Navbar from './../Navbar/Navbar';
 import SignUp from './../SignUp/SignUp';
 import Login from './../Login/Login';
+import BookDetails from './../BookDetails/BookDetails';
 import { Route, Routes } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
@@ -63,6 +64,7 @@ function App() {
         <Route path="/" element={<BookList books={filteredBooks} />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login setToken={setToken} />} />
+        <Route path="/details/:isbn" element={<BookDetails />} />
       </Routes>
     </div>
   );

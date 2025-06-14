@@ -1,7 +1,8 @@
 import React from 'react';
 import SearchBar from '../SearchBar/SearchBar';
 import { Link } from 'react-router-dom';
-import featherIcon from '../../assets/feather.svg'
+import featherIcon from '../../assets/feather.svg';
+import './Navbar.css'
 
 function NavbarMain({
   onSearchChange,
@@ -19,7 +20,7 @@ function NavbarMain({
                     alt="feather"
                     style={{ width: '24px', marginRight: '8px' }}
                   />
-                  <Link className="navbar-brand text-dark fw-bold" to="/">Light Feather Library</Link>
+                  <Link className="navbar-brand text-dark fw-bold yellowtail-regular" to="/">Light Feather Library</Link>
                 </div>
 
         <button

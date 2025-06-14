@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import featherIcon from '../../assets/feather.svg'
+import './Navbar.css'
 
 function Navbar() {
   return (
@@ -12,7 +13,7 @@ function Navbar() {
             alt="feather"
             style={{ width: '24px', marginRight: '8px' }}
           />
-          <Link className="navbar-brand text-dark fw-bold" to="/">Light Feather Library</Link>
+          <Link className="navbar-brand text-dark fw-bold yellowtail-regular" to="/">Light Feather Library</Link>
         </div>
       </div>
     </nav>

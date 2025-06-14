@@ -49,6 +49,7 @@ function Login({ setToken }) {
                 id="name"
                 placeholder="name"
                 name="username"
+                autoComplete="off"
                 onChange={e => setUserName(e.target.value)}
               />
               <label htmlFor="floatingInput">Username</label>

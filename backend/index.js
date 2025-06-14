@@ -87,6 +87,23 @@ app.get("/books", async (req, res) => {
   }
 });
 
+app.get("/api/books/:isbn", async (req, res) => {
+  const { isbn } = req.params;
+  try {
+    const result = await db.query("SELECT * FROM books WHERE isbn = $1", [isbn]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "Book not found" });
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error("Database error:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
 app.get("/auth/google", passport.authenticate("google", {
   scope: ["profile", "email"]
 }))

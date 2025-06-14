@@ -69,6 +69,7 @@ function SignUp() {
                 id="name"
                 placeholder="name"
                 name="username"
+                autoComplete="off"
                 value={formData.username}
                 onChange={handleChange}
               />
@@ -81,6 +82,7 @@ function SignUp() {
                 id="email"
                 placeholder="name@example.com"
                 name="email"
+                autoComplete="off"
                 value={formData.email}
                 onChange={handleChange}
               />
