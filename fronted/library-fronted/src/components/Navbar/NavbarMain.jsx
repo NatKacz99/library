@@ -77,7 +77,7 @@ function NavbarMain({
               )}
             </li>
             <li className="nav-item">
-              <a className="nav-link text-dark" href="#">Events</a>
+              <Link className="nav-link text-dark" to="/events">Events</Link>
             </li>
           </ul>
 

@@ -8,6 +8,7 @@ import Login from './../Login/Login';
 import Borrowings from './../MyAccount/Borrowings/Borrowings';
 import PersonalData from './../MyAccount/PersonalData/PersonalData';
 import BookDetails from './../BookDetails/BookDetails';
+import Events from './../Events/Events';
 import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
 
 
@@ -88,7 +89,10 @@ function App() {
           path="/my-data"
           element={token ? <PersonalData userName={token.name} /> : <Navigate to="/login" replace />}
         />
-
+        <Route 
+          path="/events"
+          element={<Events />}  
+        />
       </Routes>
     </div>
   );
