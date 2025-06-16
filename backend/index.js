@@ -286,7 +286,7 @@ app.post("/details/:isbn", async (req, res) => {
   }
 })
 
-app.get("/account/:userId", async (req, res) => {
+app.get("/my-borrowings/:userId", async (req, res) => {
   const { userId } = req.params;
   try {
     const result = await db.query(
@@ -302,6 +302,33 @@ app.get("/account/:userId", async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 });
+
+app.put("/my-data/updatePersonalData/:userId", async (req, res) => {
+  const {userId} = req.params.id;
+  const {name, email, password} = req.body;
+  try {
+    const [user] = await db.query('SELECT * FROM users WHERE id = $1', [userId]);
+    if (user.length === 0) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    if(name){
+      await db.query("UPDATE users SET name = ($1) WHERE id = ($2)", [name, userId])
+    }
+    if(email){
+      await db.query("UPDATE users SET email = ($1) WHERE id = ($2)", [email, userId])
+    }
+    if(password){
+      const bcrypt = require('bcrypt');
+      const hashedPassword = await bcrypt.hash(password, 10);
+      await db.query("UPDATE users SET password = ($1) WHERE id = ($2)", [hashedPassword, userId])
+    }
+    res.json({ success: true });
+  } catch(err){
+    console.error("Error:", err);
+    return res.status(500).json({success: false, message: "Internal server error" });
+  }
+})
 
 
 passport.serializeUser((user, cb) => {

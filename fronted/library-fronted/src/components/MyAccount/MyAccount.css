@@ -28,6 +28,11 @@ h2{
 
 .icon-edit{
   margin-left: 5px;
+  height: 30px
+}
+
+i:hover{
+  cursor: pointer;
 }
 
 .edit-password{
@@ -45,7 +50,5 @@ h2{
   gap: 10px;
 }
 
-button{ 
-  width: 100px
-}
+
 

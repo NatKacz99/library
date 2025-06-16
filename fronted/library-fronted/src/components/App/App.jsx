@@ -5,7 +5,8 @@ import NavbarMain from './../Navbar/NavbarMain';
 import Navbar from './../Navbar/Navbar';
 import SignUp from './../SignUp/SignUp';
 import Login from './../Login/Login';
-import MyAccount from './../MyAccount/MyAccount';
+import Borrowings from './../MyAccount/Borrowings/Borrowings';
+import PersonalData from './../MyAccount/PersonalData/PersonalData';
 import BookDetails from './../BookDetails/BookDetails';
 import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
 
@@ -39,7 +40,6 @@ function App() {
             console.log("Borrowings:", data);
           });
       }
-
     }
   }, [])
 
@@ -81,8 +81,12 @@ function App() {
         <Route path="/login" element={<Login setToken={setToken} />} />
         <Route path="/details/:isbn" element={<BookDetails />} />
         <Route
-          path="/account"
-          element={token ? <MyAccount userName={token.name} /> : <Navigate to="/login" replace />}
+          path="/my-borrowings"
+          element={token ? <Borrowings userName={token.name} /> : <Navigate to="/login" replace />}
+        />
+        <Route
+          path="/my-data"
+          element={token ? <PersonalData userName={token.name} /> : <Navigate to="/login" replace />}
         />
 
       </Routes>

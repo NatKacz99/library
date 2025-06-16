@@ -27,6 +27,7 @@ function Login({ setToken }) {
         localStorage.setItem('token', JSON.stringify({
           id: data.user.id,     
           name: data.user.name, 
+          email: data.user.email,
           token: data.token
         }));
 

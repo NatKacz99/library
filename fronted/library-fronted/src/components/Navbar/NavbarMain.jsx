@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import SearchBar from '../SearchBar/SearchBar';
 import { Link } from 'react-router-dom';
 import featherIcon from '../../assets/feather.svg';
+import LogOut from './../LogOut/LogOut';
 import './Navbar.css'
 
 function NavbarMain({
@@ -12,9 +13,10 @@ function NavbarMain({
   searchTerm
 }) {
   const [userName, setUserName] = useState("");
+  const [isAccountOpen, setIsAccountOpen] = useState(false)
 
   useEffect(() => {
-    const storedName = localStorage.getItem("name"); 
+    const storedName = localStorage.getItem("name");
     if (storedName) {
       setUserName(storedName);
     }
@@ -24,13 +26,13 @@ function NavbarMain({
     <nav className="navbar navbar-expand-lg bg-white border-bottom">
       <div className="container-fluid">
         <div className="d-flex align-items-center">
-                  <img
-                    src={featherIcon}
-                    alt="feather"
-                    style={{ width: '24px', marginRight: '8px' }}
-                  />
-                  <Link className="navbar-brand text-dark fw-bold yellowtail-regular" to="/">Light Feather Library</Link>
-                </div>
+          <img
+            src={featherIcon}
+            alt="feather"
+            style={{ width: '24px', marginRight: '8px' }}
+          />
+          <Link className="navbar-brand text-dark fw-bold yellowtail-regular" to="/">Light Feather Library</Link>
+        </div>
 
         <button
           className="navbar-toggler"
@@ -52,8 +54,27 @@ function NavbarMain({
             <li className="nav-item">
               <Link className="nav-link text-dark" to="/login">Sign In</Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link text-dark" to="/account">My account</Link>
+            <li className="nav-item dropdown">
+              <div
+                className="nav-link text-dark dropdown-toggle"
+                onClick={() => setIsAccountOpen(prev => !prev)}
+                style={{ cursor: 'pointer' }}
+              >
+                My Account
+              </div>
+              {isAccountOpen && (
+                <ul className="dropdown-menu show">
+                  <li>
+                    <Link className="dropdown-item" to="/my-data">My personal data</Link>
+                  </li>
+                  <li>
+                    <Link className="dropdown-item" to="/my-borrowings">My borrowings</Link>
+                  </li>
+                  <li className="dropdown-item">
+                    <LogOut />
+                  </li>
+                </ul>
+              )}
             </li>
             <li className="nav-item">
               <a className="nav-link text-dark" href="#">Events</a>
