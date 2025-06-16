@@ -24,7 +24,12 @@ function Login({ setToken }) {
       if (response.ok && data.success) {
         setToken(data.user);
         console.log(data.user);
-        localStorage.setItem('token', JSON.stringify(data.user));
+        localStorage.setItem('token', JSON.stringify({
+          id: data.user.id,     
+          name: data.user.name, 
+          token: data.token
+        }));
+
         navigate("/");
       } else {
         setMessage("Login failed: " + data.message);

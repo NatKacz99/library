@@ -27,6 +27,20 @@ function App() {
       .then((res) => res.json())
       .then((data) => setGenres(data))
       .catch((err) => console.error("Error while retrieving species: ", err));
+
+    const storedUser = localStorage.getItem('token');
+    if (storedUser) {
+      const storedUser = localStorage.getItem('token');
+      if (storedUser) {
+        const user = JSON.parse(storedUser);
+        fetch(`http://localhost:3000/account/${user.id}`)
+          .then(res => res.json())
+          .then(data => {
+            console.log("Borrowings:", data);
+          });
+      }
+
+    }
   }, [])
 
   const fetchBooks = async (term) => {
@@ -71,7 +85,6 @@ function App() {
           element={token ? <MyAccount userName={token.name} /> : <Navigate to="/login" replace />}
         />
 
-        <Route path="/account/*" element={<Navigate to="/login" replace />} />
       </Routes>
     </div>
   );

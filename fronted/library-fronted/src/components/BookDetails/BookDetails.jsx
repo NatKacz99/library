@@ -11,6 +11,7 @@ function BookDetails() {
     fetch(`http://localhost:3000/api/books/${isbn}`)
       .then((res) => res.json())
       .then((data) => {
+        console.log("Fetched book:", data);
         setBook(data);
       })
       .catch((error) => {
@@ -22,6 +23,41 @@ function BookDetails() {
 
   const bookCoverURL = `https://covers.openlibrary.org/b/isbn/${book.isbn}-M.jpg`;
 
+  const handleCheckOut = async () => {
+    const user = JSON.parse(localStorage.getItem('token'));
+    const userId = user?.id;
+
+    console.log(user.id);
+
+    if (!userId) {
+      alert("User not logged in!");
+      return;
+    }
+
+    const response = await fetch(`http://localhost:3000/details/${isbn}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId,
+        title: book.title,
+        author: book.author,
+        pieces_amount: book.pieces_amount
+      }),
+    });
+
+    if (response.ok) {
+      alert("Book successfully checked out!");
+
+      fetch(`http://localhost:3000/api/books/${isbn}`)
+        .then(res => res.json())
+        .then(data => setBook(data))
+        .catch(error => console.error("Error updating book info:", error));
+    } else {
+      alert("Something went wrong...");
+    }
+  };
 
   return (
     <div className="wrapper">
@@ -54,8 +90,10 @@ function BookDetails() {
           </div>
         </div>
       </div>
+      <p style={{ color: "white" }}><strong>Avaliable copies: {book.pieces_amount}</strong></p>
       <div className="buttons">
-        <button className="buttonDetail" style={{ borderRadius: "15px" }}>Check the book out</button>
+        <button className="buttonDetail" style={{ borderRadius: "15px" }}
+          onClick={handleCheckOut} disabled={book.pieces_amount === 0}>Check the book out</button>
         <button className="buttonDetail" style={{ borderRadius: "15px" }}>Book up</button>
       </div>
     </div>

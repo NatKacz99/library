@@ -18,8 +18,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(cors({
-  origin: 'http://localhost:5173',   
-  credentials: true                  
+  origin: 'http://localhost:5173',
+  credentials: true
 }));
 
 app.use(
@@ -28,9 +28,9 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-    secure: false, 
-    maxAge: 24 * 60 * 60 * 1000 
-  }
+      secure: false,
+      maxAge: 24 * 60 * 60 * 1000
+    }
   })
 );
 
@@ -111,7 +111,7 @@ app.get("/auth/google", passport.authenticate("google", {
 app.get("/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/login" }),
   (req, res) => {
-    res.redirect("http://localhost:5173/"); 
+    res.redirect("http://localhost:5173/");
   }
 );
 
@@ -226,20 +226,83 @@ passport.use("google", new GoogleStrategy({
   userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
 }, async (accessToken, refreshToken, profile, cb) => {
   console.log(profile);
-  try{
+  try {
     const result = await db.query("SELECT * FROM users WHERE email = $1", [profile.email])
-    if(result.rows.length === 0){
-      const newUser = await db.query("INSERT INTO USERS (name, password, email) VALUES($1, $2, $3)", 
+    if (result.rows.length === 0) {
+      const newUser = await db.query("INSERT INTO USERS (name, password, email) VALUES($1, $2, $3)",
         [profile.name, "google", profile.email])
       cb(null, newUser.rows[0])
-    } else{
+    } else {
       cb(null, result.rows[0])
     }
-  } catch(err){
+  } catch (err) {
     console.log(err)
   }
 }
 ))
+
+app.post("/details/:isbn", async (req, res) => {
+  const { isbn } = req.params;
+  const { userId } = req.body;
+
+  if (!userId || !isbn) {
+    return res.status(400).json({ message: "Missing userId or isbn" });
+  }
+
+  try {
+    const result = await db.query('SELECT * FROM books WHERE isbn = $1', [isbn]);
+    const book = result.rows[0];
+    if (!book) {
+      return res.status(404).json({ message: "Book not found" });
+    }
+
+    const today = new Date();
+    const returnAt = new Date(today);
+    returnAt.setDate(returnAt.getDate() + 30);
+    console.log("Return date:", returnAt.toISOString());
+
+    var piecesAmountResult = await db.query(
+      'SELECT pieces_amount FROM books'
+    )
+    var piecesAmount = piecesAmountResult.rows[0];
+
+    await db.query(
+      `INSERT INTO loans (isbn, user_id, return_at)
+        VALUES ($1, $2, $3)`, [isbn, userId, returnAt.toISOString()]
+    )
+
+    await db.query(
+    `UPDATE books
+    SET pieces_amount = pieces_amount - 1
+    WHERE isbn = $1`,
+      [isbn]
+    );
+
+    res.status(200).json({ message: "The book was borrowed successfully" });
+  }
+  catch (err) {
+    console.error("Error during loan insert:", err);
+    return res.status(500).json({ message: "Internal server error" })
+  }
+})
+
+app.get("/account/:userId", async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const result = await db.query(
+      `SELECT books.title, books.author, l.rented_at, l.return_at
+       FROM loans l
+       JOIN books ON l.isbn = books.isbn
+       WHERE l.user_id = $1`,
+      [userId]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 
 passport.serializeUser((user, cb) => {
   cb(null, user);
