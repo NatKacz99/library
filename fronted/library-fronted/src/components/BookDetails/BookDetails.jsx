@@ -34,7 +34,7 @@ function BookDetails() {
       return;
     }
 
-    const response = await fetch(`http://localhost:3000/details/${isbn}`, {
+    const responseBorrowing = await fetch(`http://localhost:3000/details/borrow/${isbn}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ function BookDetails() {
       }),
     });
 
-    if (response.ok) {
+    if (responseBorrowing.ok) {
       alert("Book successfully checked out!");
 
       fetch(`http://localhost:3000/api/books/${isbn}`)
@@ -58,6 +58,36 @@ function BookDetails() {
       alert("Something went wrong...");
     }
   };
+
+  const handleBookUp = async () => {
+    const user = JSON.parse(localStorage.getItem('token'));
+    const userId = user?.id;
+
+    console.log(user.id);
+
+    if (!userId) {
+      alert("User not logged in!");
+      return;
+    }
+
+    const responseOrder = await fetch(`http://localhost:3000/details/order/${isbn}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId,
+        title: book.title,
+        author: book.author,
+      }),
+    });
+
+    if (responseOrder.ok) {
+      alert("Book successfully order!");
+    } else {
+      alert("Something went wrong...");
+    }
+  }
 
   return (
     <div className="wrapper">
@@ -94,7 +124,8 @@ function BookDetails() {
       <div className="buttons">
         <button className="buttonDetail" style={{ borderRadius: "15px" }}
           onClick={handleCheckOut} disabled={book.pieces_amount === 0}>Check the book out</button>
-        <button className="buttonDetail" style={{ borderRadius: "15px" }}>Book up</button>
+        <button className="buttonDetail" style={{ borderRadius: "15px" }}
+          onClick={handleBookUp} disabled={book.pieces_amount > 0}>Book up</button>
       </div>
     </div>
   );

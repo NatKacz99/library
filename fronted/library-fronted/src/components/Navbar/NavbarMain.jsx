@@ -68,7 +68,7 @@ function NavbarMain({
                     <Link className="dropdown-item" to="/my-data">My personal data</Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="/my-borrowings">My borrowings</Link>
+                    <Link className="dropdown-item" to="/my-borrowings">My borrowings and orders</Link>
                   </li>
                   <li className="dropdown-item">
                     <LogOut />

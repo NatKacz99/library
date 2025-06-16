@@ -241,7 +241,7 @@ passport.use("google", new GoogleStrategy({
 }
 ))
 
-app.post("/details/:isbn", async (req, res) => {
+app.post("/details/borrow/:isbn", async (req, res) => {
   const { isbn } = req.params;
   const { userId } = req.body;
 
@@ -286,6 +286,29 @@ app.post("/details/:isbn", async (req, res) => {
   }
 })
 
+app.post("/details/order/:isbn", async (req, res) => {
+  const { isbn } = req.params;
+  const { userId } = req.body;
+
+  if (!userId || !isbn) {
+    return res.status(400).json({ message: "Missing userId or isbn" });
+  }
+
+  try {
+    const result = await db.query('SELECT * FROM books WHERE isbn = $1', [isbn]);
+    const book = result.rows[0];
+    if (!book) {
+      return res.status(404).json({ message: "Book not found" });
+    }
+    await db.query(`INSERT INTO orders (book_isbn, user_id)
+      VALUES ($1, $2)`, [isbn, userId]);
+    res.status(200).json({ message: "The book was order successfully" });
+  } catch (err) {
+    console.error("Error during order insert:", err);
+    return res.status(500).json({ message: "Internal server error" })
+  }
+})
+
 app.get("/my-borrowings/:userId", async (req, res) => {
   const { userId } = req.params;
   try {
@@ -302,6 +325,22 @@ app.get("/my-borrowings/:userId", async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 });
+
+app.get("/my-borrowings/order/:userId", async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const result = await db.query(
+      `SELECT books.title, books.author
+      FROM orders o
+      JOIN books ON o.book_isbn = books.isbn
+      WHERE o.user_id = $1`, [userId]
+    )
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+})
 
 app.put("/my-data/updatePersonalData/:userId", async (req, res) => {
   const { userId } = req.params;

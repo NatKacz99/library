@@ -50,5 +50,12 @@ i:hover{
   gap: 10px;
 }
 
+.orders{
+  background-color: white;
+  width: 50%;
+  border-radius: 15px;
+  margin: 18px auto
+}
+
 
 
