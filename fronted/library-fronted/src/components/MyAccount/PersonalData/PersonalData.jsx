@@ -28,7 +28,7 @@ function PersonalData() {
 
     try {
       const response = await fetch(`http://localhost:3000/my-data/updatePersonalData/${user.id}`, {
-        method: 'POST',
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
@@ -37,7 +37,11 @@ function PersonalData() {
 
       if (data.success) {
         alert('Your data has been updated');
-        const updatedUser = { ...user, ...formData };
+        const updatedUser = {
+          ...user,
+          ...(formData.name && { name: formData.name }),
+          ...(formData.email && { email: formData.email }),
+        };
         localStorage.setItem('token', JSON.stringify(updatedUser));
         setUser(updatedUser);
         setEditField(null);
@@ -74,7 +78,7 @@ function PersonalData() {
 
       {editField === 'email' ? (
         <form onSubmit={handleEditSubmit}>
-          <input name="email" value={formData.email} onChange={handleChange} />
+          <input type="email" name="email" value={formData.email} onChange={handleChange} />
           <button type="submit">Save</button>
           <button type="button" onClick={() => setEditField(null)}>Cancel</button>
         </form>

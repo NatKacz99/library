@@ -272,7 +272,7 @@ app.post("/details/:isbn", async (req, res) => {
     )
 
     await db.query(
-    `UPDATE books
+      `UPDATE books
     SET pieces_amount = pieces_amount - 1
     WHERE isbn = $1`,
       [isbn]
@@ -304,29 +304,34 @@ app.get("/my-borrowings/:userId", async (req, res) => {
 });
 
 app.put("/my-data/updatePersonalData/:userId", async (req, res) => {
-  const {userId} = req.params.id;
-  const {name, email, password} = req.body;
+  const { userId } = req.params;
+  const { name, email, password } = req.body;
   try {
-    const [user] = await db.query('SELECT * FROM users WHERE id = $1', [userId]);
+    const result = await db.query('SELECT * FROM users WHERE id = $1', [userId]);
+    const user = result.rows[0];
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+
     if (user.length === 0) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    if(name){
+    if (name) {
       await db.query("UPDATE users SET name = ($1) WHERE id = ($2)", [name, userId])
     }
-    if(email){
+    if (email) {
       await db.query("UPDATE users SET email = ($1) WHERE id = ($2)", [email, userId])
     }
-    if(password){
-      const bcrypt = require('bcrypt');
+    if (password) {
       const hashedPassword = await bcrypt.hash(password, 10);
       await db.query("UPDATE users SET password = ($1) WHERE id = ($2)", [hashedPassword, userId])
     }
     res.json({ success: true });
-  } catch(err){
+  } catch (err) {
     console.error("Error:", err);
-    return res.status(500).json({success: false, message: "Internal server error" });
+    return res.status(500).json({ success: false, message: "Internal server error" });
   }
 })
 
