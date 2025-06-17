@@ -1,4 +1,4 @@
-body{
+body {
   background: url("./../../assets/pattern.svg") no-repeat;
   background-size: cover;
   display: flex;
@@ -12,5 +12,11 @@ body{
 }
 
 .wrapper{
-  flex: 1
+  padding-bottom: 100px
+}
+
+.footer{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }

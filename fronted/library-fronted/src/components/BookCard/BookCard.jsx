@@ -11,7 +11,7 @@ function BookCard({ book }) {
   return (
     <div className="book-card" onClick={handleClick}>
       <img src={bookCoverURL} alt={`Cover book: ${book.title}`} />
-      <h4>{book.title}</h4>
+      <h3>{book.title}</h3>
       <p><strong>{book.author}</strong></p>
     </div>
   );

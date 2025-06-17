@@ -9,6 +9,7 @@ import Borrowings from './../MyAccount/Borrowings/Borrowings';
 import PersonalData from './../MyAccount/PersonalData/PersonalData';
 import BookDetails from './../BookDetails/BookDetails';
 import Events from './../Events/Events';
+import Footer from './../Footer/Footer';
 import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
 
 
@@ -63,11 +64,9 @@ function App() {
     : books;
   const location = useLocation();
 
-
-
   return (
+    <>
     <div className="wrapper">
-
       {location.pathname === '/' ?
         (<NavbarMain
           onSearchChange={setSearchTerm}
@@ -76,25 +75,27 @@ function App() {
           genres={genres}
           searchTerm={searchTerm}
         />) : (<Navbar />)}
-      <Routes>
-        <Route path="/" element={<BookList books={filteredBooks} />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<Login setToken={setToken} />} />
-        <Route path="/details/:isbn" element={<BookDetails />} />
-        <Route
-          path="/my-borrowings"
-          element={token ? <Borrowings userName={token.name} /> : <Navigate to="/login" replace />}
-        />
-        <Route
-          path="/my-data"
-          element={token ? <PersonalData userName={token.name} /> : <Navigate to="/login" replace />}
-        />
-        <Route 
-          path="/events"
-          element={<Events />}  
-        />
-      </Routes>
+        <Routes>
+          <Route path="/" element={<BookList books={filteredBooks} />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login setToken={setToken} />} />
+          <Route path="/details/:isbn" element={<BookDetails />} />
+          <Route
+            path="/my-borrowings"
+            element={token ? <Borrowings userName={token.name} /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/my-data"
+            element={token ? <PersonalData userName={token.name} /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/events" element={<Events />}
+          />
+          <Route path="/contact" element={<Footer />} />
+        </Routes>
     </div>
+    <div class="footer"><Footer /></div>
+    </>
   );
 }
 

@@ -1,5 +1,5 @@
 .book-card {
-  background-color: #f8f9fa;
+  background-color: #faf9f8;
   border-radius: 5px;
   padding: 0;
   height: 700px;
@@ -18,6 +18,6 @@ img{
   height: 80%;
 }
 
-h4, p{
+h3, p{
   text-align: center;
 }

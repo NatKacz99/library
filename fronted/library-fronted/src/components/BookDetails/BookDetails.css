@@ -1,6 +1,6 @@
 .wrapper{
   display: flex;
-  flex-direction: column
+  flex-direction: column;
 }
 
 .title-and-author{
@@ -10,7 +10,7 @@
 .content{
   display: flex;
   flex-direction: column;
-  background-color: white;
+  background-color: #ecc988;
   width: 80%;
   border-radius: 15px;
   box-sizing: border-box;
