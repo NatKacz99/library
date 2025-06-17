@@ -10,6 +10,7 @@ import PersonalData from './../MyAccount/PersonalData/PersonalData';
 import BookDetails from './../BookDetails/BookDetails';
 import Events from './../Events/Events';
 import Footer from './../Footer/Footer';
+import Contact from './../Contact/Contact';
 import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
 
 
@@ -91,7 +92,7 @@ function App() {
           <Route
             path="/events" element={<Events />}
           />
-          <Route path="/contact" element={<Footer />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
     </div>
     <div class="footer"><Footer /></div>
