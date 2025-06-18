@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import PropTypes from 'prop-types';
 import './Login.css';
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../contexts/UserContext";
 
 function Login({ setToken }) {
+  const { user, setUser } = useContext(UserContext);
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();
   const [message, setMessage] = useState('');
@@ -30,7 +32,7 @@ function Login({ setToken }) {
           email: data.user.email,
           token: data.token
         }));
-
+        setUser(data.user);
         navigate("/");
       } else {
         setMessage("Login failed: " + data.message);

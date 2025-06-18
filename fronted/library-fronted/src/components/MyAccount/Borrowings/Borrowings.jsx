@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { Navigate } from 'react-router-dom';
+import { UserContext } from '../../../contexts/UserContext';
 import './../MyAccount.css';
 
 function Borrowings() {
-  const [user, setUser] = useState(null);
+  const { user, setUser } = useContext(UserContext);
   const [rentals, setRentals] = useState([]);
   const [loadingRentals, setLoadingRentals] = useState(true);
   const [orders, setOrders] = useState([]);
@@ -17,7 +19,6 @@ function Borrowings() {
     const storedUser = localStorage.getItem('token');
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
       setFormData({ name: parsedUser.name, email: parsedUser.email });
 
       fetch(`http://localhost:3000/my-borrowings/${parsedUser.id}`)
@@ -50,9 +51,11 @@ function Borrowings() {
     }
   }, []);
 
-  if (!user) {
-    return <div>Loading user data...</div>;
+  if (user === undefined) return <p style={{color:"white"}}>Loading user data...</p>;
+  if (user === null) {
+    return <Navigate to="/login" />;
   }
+
   return (
     <div className="wrapper">
       <div className="rentals">
@@ -88,7 +91,7 @@ function Borrowings() {
         {loadingOrders ? (
           <p>Loading orders...</p>
         ) : orders.length === 0 ? (
-          <p>You have no active rentals.</p>
+          <p>You have no active orders.</p>
         ) : (<ul className="orders-list">
           {orders.map((book, index) => (
             <li key={index}>

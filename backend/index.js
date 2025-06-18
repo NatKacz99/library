@@ -374,6 +374,28 @@ app.put("/my-data/updatePersonalData/:userId", async (req, res) => {
   }
 })
 
+app.delete("/my-data/delete-account/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  await db.query("DELETE FROM loans WHERE user_id = $1", [userId]);
+  await db.query("DELETE FROM orders WHERE user_id = $1", [userId]);
+
+  try {
+    const result = await db.query(`DELETE FROM users WHERE id = $1 RETURNING *`, [userId]);
+
+    if (result.rowCount > 0) {
+      res.status(200).json({ success: true });
+    } else {
+      res.status(404).json({
+        success: false,
+        error: `User with id ${userId} not found. No users were deleted.`,
+      });
+    }
+  } catch (err) {
+    console.error("Error deleting user:", err);
+    res.status(500).json({ success: false, error: "Server error while deleting account" });
+  }
+});
 
 passport.serializeUser((user, cb) => {
   cb(null, user);

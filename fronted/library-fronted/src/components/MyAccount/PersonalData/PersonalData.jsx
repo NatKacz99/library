@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import {useNavigate} from 'react-router-dom';
+import { UserContext } from '../../../contexts/UserContext';
 import LogOut from '../../LogOut/LogOut';
 import './../MyAccount.css';
 
 function PersonalData() {
-  const [user, setUser] = useState(() => {
-    const token = localStorage.getItem('token');
-    return token ? JSON.parse(token) : null;
-  });
+  const { user, setUser } = useContext(UserContext);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -22,6 +21,8 @@ function PersonalData() {
       [e.target.name]: e.target.value
     }));
   };
+
+  const navigate = useNavigate();
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
@@ -50,6 +51,30 @@ function PersonalData() {
       }
     } catch (error) {
       console.error('Error updating user:', error);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!window.confirm("Are you sure you want to delete your account? This action is irreversible.")) return;
+
+    try {
+      const response = await fetch(`http://localhost:3000/my-data/delete-account/${user.id}`, {
+        method: 'DELETE'
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert("Your account has been successfully deleted.");
+        setUser(null);
+        localStorage.removeItem("token");
+        navigate("/");
+      } else {
+        alert(`Error deleting account: ${data.error}`);
+      }
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      alert("Server error occurred while deleting your account.");
     }
   };
 
@@ -109,7 +134,7 @@ function PersonalData() {
         <div style={{ textAlign: 'center' }}>
           <LogOut />
         </div>
-        <button type="submit" style={{ borderRadius: "5px", marginTop: "10px" }}>
+        <button type="submit" style={{ borderRadius: "5px", marginTop: "10px" }} onClick={handleDeleteAccount}>
           Delete your account <i className="fa-solid fa-trash"></i>
         </button>
       </div>

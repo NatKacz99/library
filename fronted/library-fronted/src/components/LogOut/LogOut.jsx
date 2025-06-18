@@ -1,11 +1,14 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { useNavigate } from "react-router-dom";
+import { UserContext } from '../../contexts/UserContext';
 
 function LogOut() {
   const navigate = useNavigate();
+  const { setUser } = useContext(UserContext);
 
   const handleLogout = () => {
-    localStorage.clear();   
+    localStorage.clear();  
+    setUser(null);  
     navigate("/login");      
   };
 
