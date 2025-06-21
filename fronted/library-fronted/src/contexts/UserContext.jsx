@@ -6,7 +6,7 @@ export function UserProvider({ children }) {
   const [user, setUser] = useState(undefined); 
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("userData");
     if (token) {
       try {
         const parsedUser = JSON.parse(token);

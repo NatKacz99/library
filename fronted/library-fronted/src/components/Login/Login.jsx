@@ -24,9 +24,7 @@ function Login({ setToken }) {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        setToken(data.user);
-        console.log(data.user);
-        localStorage.setItem('token', JSON.stringify({
+        localStorage.setItem('userData', JSON.stringify({
           id: data.user.id,     
           name: data.user.name, 
           email: data.user.email,

@@ -16,7 +16,7 @@ function Borrowings() {
   });
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('userData');
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setFormData({ name: parsedUser.name, email: parsedUser.email });

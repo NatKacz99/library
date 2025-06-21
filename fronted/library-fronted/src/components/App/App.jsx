@@ -32,9 +32,9 @@ function App() {
       .then((data) => setGenres(data))
       .catch((err) => console.error("Error while retrieving species: ", err));
 
-    const storedUser = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('userData');
     if (storedUser) {
-      const storedUser = localStorage.getItem('token');
+      const storedUser = localStorage.getItem('userData');
       if (storedUser) {
         const user = JSON.parse(storedUser);
         fetch(`http://localhost:3000/account/${user.id}`)
@@ -79,7 +79,7 @@ function App() {
         <Routes>
           <Route path="/" element={<BookList books={filteredBooks} />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/login" element={<Login setToken={setToken} />} />
+          <Route path="/login" element={<Login  />} />
           <Route path="/details/:isbn" element={<BookDetails />} />
           <Route
             path="/my-borrowings"

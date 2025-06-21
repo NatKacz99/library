@@ -24,7 +24,7 @@ function BookDetails() {
   const bookCoverURL = `https://covers.openlibrary.org/b/isbn/${book.isbn}-M.jpg`;
 
   const handleCheckOut = async () => {
-    const user = JSON.parse(localStorage.getItem('token'));
+    const user = JSON.parse(localStorage.getItem('userData'));
     const userId = user?.id;
 
     console.log(user.id);
@@ -60,7 +60,7 @@ function BookDetails() {
   };
 
   const handleBookUp = async () => {
-    const user = JSON.parse(localStorage.getItem('token'));
+    const user = JSON.parse(localStorage.getItem('userData'));
     const userId = user?.id;
 
     console.log(user.id);
