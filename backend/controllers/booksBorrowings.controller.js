@@ -20,11 +20,7 @@ export async function checkBookOut(req, res){
     returnAt.setDate(returnAt.getDate() + 30);
     console.log("Return date:", returnAt.toISOString());
 
-    var piecesAmountResult = await db.query(
-      'SELECT pieces_amount FROM books'
-    )
-    var piecesAmount = piecesAmountResult.rows[0];
-
+    await db.query('BEGIN');
     await db.query(
       `INSERT INTO loans (isbn, user_id, return_at)
         VALUES ($1, $2, $3)`, [isbn, userId, returnAt.toISOString()]
@@ -36,10 +32,12 @@ export async function checkBookOut(req, res){
     WHERE isbn = $1`,
       [isbn]
     );
+    await db.query('COMMIT');
 
     res.status(200).json({ message: "The book was borrowed successfully" });
   }
   catch (err) {
+    await db.query('ROLLBACK');
     console.error("Error during loan insert:", err);
     return res.status(500).json({ message: "Internal server error" })
   }

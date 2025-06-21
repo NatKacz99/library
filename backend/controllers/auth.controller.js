@@ -12,7 +12,7 @@ export function authGoogleCallback(req, res) {
   res.redirect("http://localhost:5173/");
 }
 
-export async function login(req, res, next){
+export async function login(req, res, next) {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
       console.error("Authentication error:", err);
@@ -34,7 +34,7 @@ export async function login(req, res, next){
 }
 
 
-export async function signup(req, res){
+export async function signup(req, res) {
   const { username, email, password, confirmPassword } = req.body;
   console.log(username);
   console.log(email);
@@ -70,15 +70,18 @@ export async function signup(req, res){
       return res.status(400).json({ success: false, message: 'Username already exist. Choose a different nick.' })
     }
 
-    bcrypt.hash(password, saltRounds, async (err, hash) => {
-      if (err) {
-        console.log("Error hashing password:", err)
-      }
+    try {
+      const hash = await bcrypt.hash(password, saltRounds);
       const result = await db.query(
         `INSERT INTO USERS (name, password, email) VALUES ($1, $2, $3)`,
-        [username, hash, email]);
+        [username, hash, email]
+      );
       return res.status(200).json({ success: true, message: 'Registration was successful!' });
-    })
+    } catch (err) {
+      console.error("Error during registration:", err);
+      return res.status(500).json({ success: false, message: 'Registration failed.' });
+    }
+
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ success: false, message: 'Server error.' });
