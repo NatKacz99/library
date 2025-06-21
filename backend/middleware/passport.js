@@ -44,8 +44,8 @@ passport.use("google", new GoogleStrategy({
   try {
     const result = await db.query("SELECT * FROM users WHERE email = $1", [profile.email])
     if (result.rows.length === 0) {
-      const newUser = await db.query("INSERT INTO USERS (name, password, email) VALUES($1, $2, $3)",
-        [profile.name, "google", profile.email])
+      const newUser = await db.query("INSERT INTO USERS (name, password, email) VALUES($1, $2, $3) RETURNING *",
+        [profile.name, null, profile.email])
       cb(null, newUser.rows[0])
     } else {
       cb(null, result.rows[0])
@@ -57,10 +57,17 @@ passport.use("google", new GoogleStrategy({
 ))
 
 passport.serializeUser((user, cb) => {
-  cb(null, user);
+  cb(null, user.id);
 });
-passport.deserializeUser((user, cb) => {
-  cb(null, user);
+passport.deserializeUser(async (id, cb) => {
+  try {
+    const result = await db.query("SELECT * FROM users WHERE id = $1", [id]);
+    const user = result.rows[0];
+    delete user.password;
+    cb(null, user);
+  } catch (err) {
+    cb(err);
+  }
 });
 
 export default passport;

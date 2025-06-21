@@ -30,7 +30,7 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      secure: false,
+      secure: process.env.NODE_ENV === 'production',
       maxAge: 24 * 60 * 60 * 1000
     }
   })
@@ -44,9 +44,9 @@ app.get("/", async (req, res) => {
   try {
     const books = await selectAllBooks();
     res.json(books);
-  } catch {
+  } catch(err) {
     console.error(err.message);
-    res.status(500).send('Server error');
+    res.status(500).json('Server error');
   }
 })
 

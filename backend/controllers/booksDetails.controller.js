@@ -4,9 +4,9 @@ export async function searchGenres(req, res){
   try {
     const genres = await db.query('SELECT DISTINCT genre FROM books');
     res.json(genres.rows)
-  } catch {
+  } catch(err) {
     console.error(err.message);
-    res.status(500).send('Server error');
+    res.status(500).json('Server error');
   }
 }
 
@@ -21,7 +21,7 @@ export async function searchBooksByTitleOrAuthor(req, res){
     res.json(result.rows);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send("Server error");
+    res.status(500).json("Server error");
   }
 }
 
