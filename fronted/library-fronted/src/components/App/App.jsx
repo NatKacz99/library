@@ -34,15 +34,13 @@ function App() {
 
     const storedUser = localStorage.getItem('userData');
     if (storedUser) {
-      const storedUser = localStorage.getItem('userData');
-      if (storedUser) {
-        const user = JSON.parse(storedUser);
-        fetch(`http://localhost:3000/account/${user.id}`)
-          .then(res => res.json())
-          .then(data => {
-            console.log("Borrowings:", data);
-          });
-      }
+      const user = JSON.parse(storedUser);
+      setToken(user); 
+      fetch(`http://localhost:3000/account/${user.id}`)
+        .then(res => res.json())
+        .then(data => {
+          console.log("Borrowings:", data);
+        });
     }
   }, [])
 
@@ -67,19 +65,19 @@ function App() {
 
   return (
     <>
-    <div className="wrapper">
-      {location.pathname === '/' ?
-        (<NavbarMain
-          onSearchChange={setSearchTerm}
-          selectedGenre={selectedGenre}
-          setSelectedGenre={setSelectedGenre}
-          genres={genres}
-          searchTerm={searchTerm}
-        />) : (<Navbar />)}
+      <div className="wrapper">
+        {location.pathname === '/' ?
+          (<NavbarMain
+            onSearchChange={setSearchTerm}
+            selectedGenre={selectedGenre}
+            setSelectedGenre={setSelectedGenre}
+            genres={genres}
+            searchTerm={searchTerm}
+          />) : (<Navbar />)}
         <Routes>
           <Route path="/" element={<BookList books={filteredBooks} />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/login" element={<Login  />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/details/:isbn" element={<BookDetails />} />
           <Route
             path="/my-borrowings"
@@ -94,8 +92,8 @@ function App() {
           />
           <Route path="/contact" element={<Contact />} />
         </Routes>
-    </div>
-    <div class="footer"><Footer /></div>
+      </div>
+      <div class="footer"><Footer /></div>
     </>
   );
 }

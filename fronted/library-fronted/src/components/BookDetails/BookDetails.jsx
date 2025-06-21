@@ -30,7 +30,7 @@ function BookDetails() {
     console.log(user.id);
 
     if (!userId) {
-      alert("User not logged in!");
+      <p>User not logged in!</p>;
       return;
     }
 
