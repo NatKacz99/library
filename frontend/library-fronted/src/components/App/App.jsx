@@ -19,7 +19,10 @@ function App() {
   const [genres, setGenres] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [token, setToken] = useState();
+  const [token, setToken] = useState(() => {
+    const stored = localStorage.getItem("userData");
+    return stored ? JSON.parse(stored) : null;
+  });
 
   useEffect(() => {
     fetch("http://localhost:3000/")
@@ -35,7 +38,7 @@ function App() {
     const storedUser = localStorage.getItem('userData');
     if (storedUser) {
       const user = JSON.parse(storedUser);
-      setToken(user); 
+      setToken(user);
       fetch(`http://localhost:3000/account/${user.id}`)
         .then(res => res.json())
         .then(data => {

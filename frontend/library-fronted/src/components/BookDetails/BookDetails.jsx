@@ -6,6 +6,8 @@ function BookDetails() {
   const { isbn } = useParams();
   const [book, setBook] = useState(null);
   const [rating, setRating] = useState(0);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
 
   useEffect(() => {
     fetch(`http://localhost:3000/api/books/${isbn}`)
@@ -24,13 +26,19 @@ function BookDetails() {
   const bookCoverURL = `https://covers.openlibrary.org/b/isbn/${book.isbn}-M.jpg`;
 
   const handleCheckOut = async () => {
+    let userId = null;
+    try {
     const user = JSON.parse(localStorage.getItem('userData'));
-    const userId = user?.id;
-
-    console.log(user.id);
+    userId = user?.id;
+  } catch (error) {
+    console.error("Could not parse userData:", error);
+    setMessage("User not logged in!");
+    return;
+  }
 
     if (!userId) {
-      <p>User not logged in!</p>;
+      setMessage("User not logged in!");
+      setMessageType("warning");
       return;
     }
 
@@ -48,25 +56,33 @@ function BookDetails() {
     });
 
     if (responseBorrowing.ok) {
-      alert("Book successfully checked out!");
+      setMessage("Book successfully checked out!");
+      setMessageType("successful");
 
       fetch(`http://localhost:3000/api/books/${isbn}`)
         .then(res => res.json())
         .then(data => setBook(data))
         .catch(error => console.error("Error updating book info:", error));
     } else {
-      alert("Something went wrong...");
+      setMessage("Something went wrong...");
+      setMessageType("warning")
     }
   };
 
   const handleBookUp = async () => {
+    let userId = null;
+    try {
     const user = JSON.parse(localStorage.getItem('userData'));
-    const userId = user?.id;
-
-    console.log(user.id);
+    userId = user?.id;
+  } catch (error) {
+    console.error("Could not parse userData:", error);
+    setMessage("User not logged in!");
+    return;
+  }
 
     if (!userId) {
-      alert("User not logged in!");
+      setMessage("User not logged in!");
+      setMessageType("warning");
       return;
     }
 
@@ -83,9 +99,11 @@ function BookDetails() {
     });
 
     if (responseOrder.ok) {
-      alert("Book successfully order!");
+      setMessage("Book successfully order!");
+      setMessage("successful");
     } else {
       alert("Something went wrong...");
+      setMessageType("warning")
     }
   }
 
@@ -124,6 +142,13 @@ function BookDetails() {
       <div className="buttons">
         <button className="buttonDetail" style={{ borderRadius: "15px" }}
           onClick={handleCheckOut} disabled={book.pieces_amount === 0}>Check the book out</button>
+        {message && messageType === "warning" && (
+          <div className="alert alert-warning mt-3">
+            {message}
+          </div>
+        )}
+        {message && messageType === "successful" && (
+        <div className="alert alert-success" role="alert">{message}</div>)}
         <button className="buttonDetail" style={{ borderRadius: "15px" }}
           onClick={handleBookUp} disabled={book.pieces_amount > 0}>Book up</button>
       </div>

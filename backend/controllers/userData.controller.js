@@ -13,7 +13,6 @@ export async function updateUserData(req, res){
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-
     if (user.length === 0) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
