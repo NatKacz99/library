@@ -1,4 +1,5 @@
 import db from "../config/DataBase.js";
+import { sanitizeSearchTerm } from '../middleware/sanitization.js';
 
 export async function searchGenres(req, res){
   try {
@@ -11,7 +12,7 @@ export async function searchGenres(req, res){
 }
 
 export async function searchBooksByTitleOrAuthor(req, res){
-  const search = req.query.search || "";
+  const search = sanitizeSearchTerm(req.query.search || "");
 
   try {
     const result = await db.query(

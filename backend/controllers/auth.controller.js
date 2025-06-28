@@ -1,6 +1,7 @@
 import db from "./../config/DataBase.js";
 import passport from "passport";
 import bcrypt from 'bcrypt';
+import { sanitizeString, sanitizeEmail, sanitizeUserId } from '../middleware/sanitization.js';
 
 const saltRounds = 10;
 
@@ -41,6 +42,11 @@ export async function signup(req, res) {
   console.log(password);
   console.log(confirmPassword);
   try {
+    username = sanitizeString(username, 50);
+    email = sanitizeEmail(email);
+    password = sanitizeString(password, 100);
+    confirmPassword = sanitizeString(confirmPassword, 100);
+    
     if (!username || !email || !password || !confirmPassword) {
       return res.status(400).json({ success: false, message: 'All fields are required.' });
     }

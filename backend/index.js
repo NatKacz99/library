@@ -9,6 +9,7 @@ import booksDetailsRoutes from "./routes/booksDetails.routes.js";
 import booksBorrowingsRoutes from "./routes/booksBorrowings.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import {selectAllBooks} from "./services/allBooks.services.js";
+import { sanitizeMiddleware } from './middleware/sanitization.js';
 import "./middleware/passport.js";
 import cors from 'cors';
 
@@ -17,7 +18,8 @@ env.config();
 const app = express();
 const port = 3000;
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.json({limit: '1mb'}));
+app.use(sanitizeMiddleware);
 
 app.use(cors({
   origin: 'http://localhost:5173',

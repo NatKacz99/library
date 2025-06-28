@@ -29,7 +29,8 @@ export function UserProvider({ children }) {
       setUser, 
       loginUser, 
       logoutUser, 
-      loading
+      loading,
+      isAuthenticated: !!user
     }}>
       {children}
     </UserContext.Provider>

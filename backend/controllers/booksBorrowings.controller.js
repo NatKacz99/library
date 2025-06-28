@@ -1,4 +1,5 @@
 import db from "../config/DataBase.js";
+import { sanitizeUserId } from '../middleware/sanitization.js';
 
 export async function checkBookOut(req, res) {
   const { isbn } = req.params;
@@ -9,6 +10,15 @@ export async function checkBookOut(req, res) {
   }
 
   try {
+    userId = sanitizeUserId(userId);
+    //ISBN format validation
+    if (!/^(97[89])?\d{9}(\d|X)$/i.test(isbn)) {
+      return res.status(400).json({ 
+        success: false, 
+        message: "Invalid ISBN format" 
+      });
+    }
+
     const today = new Date();
     const returnAt = new Date(today);
     returnAt.setDate(returnAt.getDate() + 30);
@@ -67,6 +77,12 @@ export async function checkBookOut(req, res) {
   }
   catch (err) {
     await db.query('ROLLBACK');
+    if (err.message === 'Invalid user ID') {
+      return res.status(400).json({ 
+        success: false, 
+        message: "Invalid user ID" 
+      });
+    }
     console.error("Error during loan insert:", err);
     return res.status(500).json({ message: "Internal server error" })
   }
