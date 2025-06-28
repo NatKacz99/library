@@ -12,11 +12,18 @@ import {selectAllBooks} from "./services/allBooks.services.js";
 import { sanitizeMiddleware } from './middleware/sanitization.js';
 import "./middleware/passport.js";
 import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 
 env.config();
 
 const app = express();
 const port = 3000;
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5, 
+  skipSuccessfulRequests: true,
+});
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json({limit: '1mb'}));
 app.use(sanitizeMiddleware);
@@ -41,6 +48,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use('/login', loginLimiter);
 
 app.get("/", async (req, res) => {
   try {
