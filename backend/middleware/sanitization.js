@@ -42,7 +42,7 @@ export function sanitizeSearchTerm(search) {
 export function sanitizeUserId(userId) {
   const parsed = parseInt(userId);
   
-  if (isNaN(parsed) || parsed <= 0) {
+  if (parsed <= 0) {
     throw new Error('Invalid user ID');
   }
   
