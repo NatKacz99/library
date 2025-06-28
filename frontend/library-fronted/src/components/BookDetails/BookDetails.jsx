@@ -97,12 +97,12 @@ function BookDetails() {
         author: book.author,
       }),
     });
-
+    const data = await responseOrder.json();
     if (responseOrder.ok) {
       setMessage("Book successfully order!");
       setMessageType("successful");
     } else {
-      alert("Something went wrong...");
+      setMessage(data.message || "Something went wrong...");
       setMessageType("warning")
     }
   }

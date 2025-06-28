@@ -81,11 +81,29 @@ export async function bookUpBook(req, res) {
   }
 
   try {
-    const result = await db.query('SELECT * FROM books WHERE isbn = $1', [isbn]);
-    const book = result.rows[0];
+    const bookResult = await db.query('SELECT * FROM books WHERE isbn = $1', [isbn]);
+    const book = bookResult.rows[0];
+
     if (!book) {
-      return res.status(404).json({ message: "Book not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Book not found"
+      });
     }
+
+
+    const existingOrder = await db.query(
+      'SELECT id FROM orders WHERE book_isbn = $1 AND user_id = $2',
+      [isbn, userId]
+    );
+
+    if (existingOrder.rows.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "You have already ordered this book"
+      });
+    }
+
     await db.query(`INSERT INTO orders (book_isbn, user_id)
       VALUES ($1, $2)`, [isbn, userId]);
     res.status(200).json({ message: "The book was order successfully" });
