@@ -75,7 +75,7 @@ export async function signup(req, res) {
     if (password.length > 100) {
       return res.status(400).json({ 
         success: false, 
-        message: `Password too long (${username.length} characters). Maximum: 100 characters.` 
+        message: `Password too long (${password.length} characters). Maximum: 100 characters.` 
       });
     }
 
