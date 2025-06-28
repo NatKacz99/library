@@ -11,6 +11,7 @@ import BookDetails from './../BookDetails/BookDetails';
 import Events from './../Events/Events';
 import Footer from './../Footer/Footer';
 import Contact from './../Contact/Contact';
+import { useDebounce } from '../../hooks/useDebounce';
 import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
 
 
@@ -57,9 +58,11 @@ function App() {
     }
   };
 
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
   useEffect(() => {
-    fetchBooks(searchTerm);
-  }, [searchTerm]);
+    fetchBooks(debouncedSearchTerm);
+  }, [debouncedSearchTerm]);
 
   const filteredBooks = selectedGenre
     ? books.filter(book => book.genre === selectedGenre)
@@ -96,7 +99,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
         </Routes>
       </div>
-      <div class="footer"><Footer /></div>
+      <div className="footer"><Footer /></div>
     </>
   );
 }

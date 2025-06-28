@@ -100,7 +100,7 @@ function BookDetails() {
 
     if (responseOrder.ok) {
       setMessage("Book successfully order!");
-      setMessage("successful");
+      setMessageType("successful");
     } else {
       alert("Something went wrong...");
       setMessageType("warning")
