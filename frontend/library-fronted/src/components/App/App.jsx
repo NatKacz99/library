@@ -15,6 +15,7 @@ import ProtectedRoute from './../ProtectedRoute/ProtectedRoute';
 import { UserContext } from './../../contexts/UserContext';
 import ChatbotIcon from "./../ChatbotIcon";
 import ChatForm from "./../ChatForm";
+import ChatMessage from "./../ChatMessage";
 import { useDebounce } from '../../hooks/useDebounce';
 import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
 
@@ -24,6 +25,7 @@ function App() {
   const [genres, setGenres] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [chatHistory, setChatHistory] = useState([])
 
   const { user } = useContext(UserContext);
 
@@ -59,6 +61,10 @@ function App() {
     ? books.filter(book => book.genre === selectedGenre)
     : books;
   const location = useLocation();
+
+  const generateBotResponse = (history) => {
+    console.log(history)
+  }
 
   return (
     <>
@@ -117,15 +123,14 @@ function App() {
                 How can I help you today?
               </p>
             </div>
-            <div className="message user-message">
-              <p className="message-text">
-                bla bla
-              </p>
-            </div>
+
+            {chatHistory.map((chat, index) => (
+              <ChatMessage key={index} chat={chat} />
+            ))}
           </div>
 
           <div className="chat-footer">
-            <ChatForm />
+            <ChatForm chatHistory={chatHistory} setChatHistory={setChatHistory} generateBotResponse={generateBotResponse}/>
           </div>
         </div>
       </div>
