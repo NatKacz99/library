@@ -13,6 +13,8 @@ import Footer from './../Footer/Footer';
 import Contact from './../Contact/Contact';
 import ProtectedRoute from './../ProtectedRoute/ProtectedRoute';
 import { UserContext } from './../../contexts/UserContext';
+import ChatbotIcon from "./../ChatbotIcon";
+import ChatForm from "./../ChatForm";
 import { useDebounce } from '../../hooks/useDebounce';
 import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
 
@@ -95,7 +97,39 @@ function App() {
           />
           <Route path="/contact" element={<Contact />} />
         </Routes>
+
+        <div className="chatbot-popup">
+          <div className="chat-header">
+            <div className="header-info">
+              <ChatbotIcon />
+              <h2 className="logo-text">Chatbot</h2>
+            </div>
+            <button className="material-symbols-rounded">
+              keyboard_arrow_down
+            </button>
+          </div>
+
+          <div className="chat-body">
+            <div className="message bot-message">
+              <ChatbotIcon />
+              <p className="message-text">
+                Hey there 👋 <br />
+                How can I help you today?
+              </p>
+            </div>
+            <div className="message user-message">
+              <p className="message-text">
+                bla bla
+              </p>
+            </div>
+          </div>
+
+          <div className="chat-footer">
+            <ChatForm />
+          </div>
+        </div>
       </div>
+
       <div className="footer"><Footer /></div>
     </>
   );
