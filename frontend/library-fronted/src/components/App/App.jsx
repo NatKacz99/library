@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import './App.css';
 import BookList from './../BookList/BookList';
 import NavbarMain from './../Navbar/NavbarMain';
@@ -11,6 +11,8 @@ import BookDetails from './../BookDetails/BookDetails';
 import Events from './../Events/Events';
 import Footer from './../Footer/Footer';
 import Contact from './../Contact/Contact';
+import ProtectedRoute from './../ProtectedRoute/ProtectedRoute';
+import { UserContext } from './../../contexts/UserContext';
 import { useDebounce } from '../../hooks/useDebounce';
 import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
 
@@ -20,10 +22,8 @@ function App() {
   const [genres, setGenres] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [token, setToken] = useState(() => {
-    const stored = localStorage.getItem("userData");
-    return stored ? JSON.parse(stored) : null;
-  });
+
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     fetch("http://localhost:3000/")
@@ -39,7 +39,6 @@ function App() {
     const storedUser = localStorage.getItem('userData');
     if (storedUser) {
       const user = JSON.parse(storedUser);
-      setToken(user);
       fetch(`http://localhost:3000/account/${user.id}`)
         .then(res => res.json())
         .then(data => {
@@ -87,11 +86,19 @@ function App() {
           <Route path="/details/:isbn" element={<BookDetails />} />
           <Route
             path="/my-borrowings"
-            element={token ? <Borrowings userName={token.name} /> : <Navigate to="/login" replace />}
+            element={
+              <ProtectedRoute>
+                <Borrowings />
+              </ProtectedRoute>
+            }
           />
           <Route
             path="/my-data"
-            element={token ? <PersonalData userName={token.name} /> : <Navigate to="/login" replace />}
+            element={
+              <ProtectedRoute>
+                <PersonalData />
+              </ProtectedRoute>
+            }
           />
           <Route
             path="/events" element={<Events />}

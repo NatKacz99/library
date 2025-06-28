@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import './Login.css';
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext";
+import { AuthService } from '../../services/AuthService';
 
 function Login({ setToken }) {
   const { user, setUser } = useContext(UserContext);
+  const { loginUser } = useContext(UserContext);
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();
   const [message, setMessage] = useState('');
@@ -13,6 +15,7 @@ function Login({ setToken }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     try {
       const response = await fetch("http://localhost:3000/login", {
         method: "POST",
@@ -24,21 +27,17 @@ function Login({ setToken }) {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        localStorage.setItem('userData', JSON.stringify({
-          id: data.user.id,     
-          name: data.user.name, 
-          email: data.user.email,
-          token: data.token
-        }));
-        setUser(data.user);
+        loginUser(data.user); 
         navigate("/");
       } else {
-        setMessage("Login failed: " + data.message);
+        setMessage(data.message || "Login failed");
       }
     } catch (error) {
       console.error("Login error:", error);
+      setMessage("Network error occurred");
     }
   };
+  
   return (
     <div
       className="d-flex justify-content-center align-items-start"

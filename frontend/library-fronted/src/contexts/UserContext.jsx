@@ -1,27 +1,36 @@
 import React, { createContext, useEffect, useState } from "react";
+import { AuthService } from '../services/AuthService.js';
 
 export const UserContext = createContext();
 
 export function UserProvider({ children }) {
-  const [user, setUser] = useState(undefined); 
+  const [user, setUser] = useState(null); 
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
-    const token = localStorage.getItem("userData");
-    if (token) {
-      try {
-        const parsedUser = JSON.parse(token);
-        setUser(parsedUser);
-      } catch (err) {
-        console.error("User parsing error from localStorage:", err);
-        setUser(null);
-      }
-    } else {
-      setUser(null); 
-    }
+    const storedUser = AuthService.getUser();
+    setUser(storedUser);
+    setLoading(false);
   }, []);
 
+  const loginUser = (userData) => {
+    AuthService.setUser(userData);
+    setUser(userData);
+  };
+
+  const logoutUser = () => {
+    AuthService.clearUser();
+    setUser(null);
+  };
+
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ 
+      user, 
+      setUser, 
+      loginUser, 
+      logoutUser, 
+      loading
+    }}>
       {children}
     </UserContext.Provider>
   );
