@@ -72,6 +72,13 @@ export async function signup(req, res) {
         least 8 characters`})
     }
 
+    if (password.length > 100) {
+      return res.status(400).json({ 
+        success: false, 
+        message: `Password too long (${username.length} characters). Maximum: 100 characters.` 
+      });
+    }
+
     const checkResultEmail = await db.query("SELECT * FROM users WHERE email = $1", [
       email
     ]);
