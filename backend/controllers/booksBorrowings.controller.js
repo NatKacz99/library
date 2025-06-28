@@ -1,6 +1,6 @@
 import db from "../config/DataBase.js";
 
-export async function checkBookOut(req, res){
+export async function checkBookOut(req, res) {
   const { isbn } = req.params;
   const { userId } = req.body;
 
@@ -9,18 +9,47 @@ export async function checkBookOut(req, res){
   }
 
   try {
-    const result = await db.query('SELECT * FROM books WHERE isbn = $1', [isbn]);
-    const book = result.rows[0];
-    if (!book) {
-      return res.status(404).json({ message: "Book not found" });
-    }
-
     const today = new Date();
     const returnAt = new Date(today);
     returnAt.setDate(returnAt.getDate() + 30);
     console.log("Return date:", returnAt.toISOString());
 
     await db.query('BEGIN');
+
+    const bookResult = await db.query(
+      'SELECT isbn, pieces_amount FROM books WHERE isbn = $1 FOR UPDATE',
+      [isbn]
+    );
+
+    if (bookResult.rows.length === 0) {
+      await db.query('ROLLBACK');
+      return res.status(404).json({ success: false, message: "Book not found" });
+    }
+
+    const book = bookResult.rows[0];
+
+    if (book.pieces_amount <= 0) {
+      await db.query('ROLLBACK');
+      return res.status(400).json({
+        success: false,
+        message: "Book is not available"
+      });
+    }
+
+    const existingLoan = await db.query(
+      'SELECT id FROM loans WHERE isbn = $1 AND user_id = $2 AND return_at > NOW()',
+      [isbn, userId]
+    );
+
+    if (existingLoan.rows.length > 0) {
+      await db.query('ROLLBACK');
+      return res.status(400).json({
+        success: false,
+        message: "You have already borrowed this book"
+      });
+    }
+
+
     await db.query(
       `INSERT INTO loans (isbn, user_id, return_at)
         VALUES ($1, $2, $3)`, [isbn, userId, returnAt.toISOString()]
@@ -43,7 +72,7 @@ export async function checkBookOut(req, res){
   }
 }
 
-export async function bookUpBook(req, res){
+export async function bookUpBook(req, res) {
   const { isbn } = req.params;
   const { userId } = req.body;
 
@@ -66,7 +95,7 @@ export async function bookUpBook(req, res){
   }
 }
 
-export async function displayUserBorrowings(req, res){
+export async function displayUserBorrowings(req, res) {
   const { userId } = req.params;
   try {
     const result = await db.query(
@@ -82,7 +111,7 @@ export async function displayUserBorrowings(req, res){
     return res.status(500).json({ message: "Internal server error" });
   }
 }
-export async function displayUserOrders(req, res){
+export async function displayUserOrders(req, res) {
   const { userId } = req.params;
   try {
     const result = await db.query(

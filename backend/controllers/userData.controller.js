@@ -37,22 +37,36 @@ export async function updateUserData(req, res){
 export async function deleteUserAccount(req, res){
   const { userId } = req.params;
 
-  await db.query("DELETE FROM loans WHERE user_id = $1", [userId]);
-  await db.query("DELETE FROM orders WHERE user_id = $1", [userId]);
-
   try {
-    const result = await db.query(`DELETE FROM users WHERE id = $1 RETURNING *`, [userId]);
+    await db.query('BEGIN');
 
-    if (result.rowCount > 0) {
-      res.status(200).json({ success: true });
-    } else {
-      res.status(404).json({
+    const userCheck = await db.query('SELECT id FROM users WHERE id = $1', [userId]);
+    if (userCheck.rows.length === 0) {
+      await db.query('ROLLBACK');
+      return res.status(404).json({
         success: false,
-        error: `User with id ${userId} not found. No users were deleted.`,
+        error: `User with id ${userId} not found.`,
       });
     }
-  } catch (err) {
-    console.error("Error deleting user:", err);
-    res.status(500).json({ success: false, error: "Server error while deleting account" });
+
+    await db.query("DELETE FROM loans WHERE user_id = $1", [userId]);
+    await db.query("DELETE FROM orders WHERE user_id = $1", [userId]);
+    
+    const result = await db.query(`DELETE FROM users WHERE id = $1 RETURNING *`, [userId]);
+
+    await db.query('COMMIT');
+
+    res.status(200).json({ 
+      success: true,
+      message: "Account deleted successfully"
+    });
+
+  } catch (error) {
+    await db.query('ROLLBACK');
+    console.error("Error deleting user:", error);
+    res.status(500).json({ 
+      success: false, 
+      error: "Server error while deleting account" 
+    });
   }
 }
