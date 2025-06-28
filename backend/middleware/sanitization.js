@@ -6,7 +6,9 @@ export function sanitizeString(str, maxLength = 255) {
 
   str = str.trim();
 
-  str = str.substring(0, maxLength);
+  if (str.length > maxLength) {
+    str = str.substring(0, maxLength);
+  }
 
   str = xss(str, {
     whiteList: {}, 
