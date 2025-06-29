@@ -1,4 +1,3 @@
-import "./ChatbotIcon.css"
 
 const ChatbotIcon = () => {
   return(
