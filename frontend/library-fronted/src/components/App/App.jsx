@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
 import './App.css';
+import './../Chatbot/Chatbot.css';
 import BookList from './../BookList/BookList';
 import NavbarMain from './../Navbar/NavbarMain';
 import Navbar from './../Navbar/Navbar';
