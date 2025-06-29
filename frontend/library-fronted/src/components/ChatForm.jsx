@@ -14,7 +14,7 @@ const ChatForm = ({ chatHistory, setChatHistory, generateBotResponse }) => {
     //Add a "Thinking..." placeholder for the bot's response
     setTimeout(() => {
       setChatHistory((history) => [...history, { role: "model", text: "Thinking.." }])
-      generateBotResponse(...chatHistory, { role: "user", text: userMessage })
+      generateBotResponse([...chatHistory, { role: "user", text: userMessage }])
     }, 600);
   }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import './App.css';
 import BookList from './../BookList/BookList';
 import NavbarMain from './../Navbar/NavbarMain';
@@ -25,9 +25,13 @@ function App() {
   const [genres, setGenres] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [chatHistory, setChatHistory] = useState([])
+  const [chatHistory, setChatHistory] = useState([]);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [lastRequestTime, setLastRequestTime] = useState(0);
 
   const { user } = useContext(UserContext);
+
+  const chatBodyRef = useRef();
 
   useEffect(() => {
     fetch("http://localhost:3000/")
@@ -62,9 +66,63 @@ function App() {
     : books;
   const location = useLocation();
 
-  const generateBotResponse = (history) => {
-    console.log(history)
-  }
+  const generateBotResponse = async (history) => {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: history.map(({ role, text }) => ({
+          role: role === 'user' ? 'user' : 'model',
+          parts: [{ text }]
+        }))
+      })
+    };
+
+    try {
+      const response = await fetch(import.meta.env.VITE_API_URL, requestOptions);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error?.message || "Something went wrong!");
+      }
+
+      const botResponse = data.candidates[0].content.parts[0].text;
+
+      setChatHistory(prev => {
+        const newHistory = [...prev];
+        const thinkingIndex = newHistory.findLastIndex(msg => msg.text === "Thinking..");
+
+        if (thinkingIndex !== -1) {
+          newHistory[thinkingIndex] = { role: "model", text: botResponse };
+        } else {
+          newHistory.push({ role: "model", text: botResponse });
+        }
+
+        return newHistory;
+      });
+
+    } catch (error) {
+      console.error("Error:", error);
+
+      setChatHistory(prev => {
+        const newHistory = [...prev];
+        const thinkingIndex = newHistory.findLastIndex(msg => msg.text === "Thinking..");
+
+        if (thinkingIndex !== -1) {
+          newHistory[thinkingIndex] = {
+            role: "model",
+            text: "Sorry, something went wrong. Please try again."
+          };
+        }
+
+        return newHistory;
+      });
+    }
+  };
+
+  useEffect(() => {
+    chatBodyRef.current.scrollTo({top: chatBodyRef.current.scrollHeight, behavior: "smooth"})
+  }, [chatHistory])
 
   return (
     <>
@@ -115,7 +173,7 @@ function App() {
             </button>
           </div>
 
-          <div className="chat-body">
+          <div ref={chatBodyRef} className="chat-body">
             <div className="message bot-message">
               <ChatbotIcon />
               <p className="message-text">
@@ -130,7 +188,7 @@ function App() {
           </div>
 
           <div className="chat-footer">
-            <ChatForm chatHistory={chatHistory} setChatHistory={setChatHistory} generateBotResponse={generateBotResponse}/>
+            <ChatForm chatHistory={chatHistory} setChatHistory={setChatHistory} generateBotResponse={generateBotResponse} />
           </div>
         </div>
       </div>
