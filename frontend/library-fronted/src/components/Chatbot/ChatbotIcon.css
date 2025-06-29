@@ -1,17 +1,51 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Yellowtail&display=swap');
 
+#chatbot-toggler {
+  position: fixed;
+  bottom: 30px;
+  right: 35px;
+  border: none;
+  height: 50px;
+  width: 50px;
+  display: flex;
+  cursor: pointer;
+  border-radius: 50%;
+  background: #6D4FC2;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease
+}
+
+#chatbot-toggler span {
+  position: absolute;
+  color: #fff
+}
+
 .chatbot-popup {
   margin: 0;
   padding: 0;
+  opacity: 0;
+  pointer-events: none;
   box-sizing: border-box;
   font-family: "Inter", sans-serif;
   width: 420px;
-  position: relative;
+  transform: scale(0.2);
+  position: fixed;
+  bottom: 90px;
+  right: 35px;
   overflow: hidden;
   margin-left: auto;
   border-radius: 15px;
+  transform-origin: bottom right;
   box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0.1),
-    0 32px 64px -48px rgba(0, 0, 0, 0.5)
+    0 32px 64px -48px rgba(0, 0, 0, 0.5);
+  transition: all 0.1s ease
+}
+
+.chatbot-popup.show-chatbot {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
 }
 
 .chatbot-popup .chat-header {
@@ -134,7 +168,7 @@
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.6)
 }
 
-.chat-form:focus-within{
+.chat-form:focus-within {
   outline: 2px solid #6D4FC2
 }
 
@@ -148,7 +182,7 @@
   font-size: 0.95rem
 }
 
-.chat-form button{
+.chat-form button {
   height: 35px;
   width: 35px;
   display: none;
@@ -164,10 +198,38 @@
   transition: 0.2s ease
 }
 
-.chat-form button:hover{
+.chat-form button:hover {
   background: #593bab
 }
 
-.chat-form .message-input:valid~button{
+.chat-form .message-input:valid~button {
   display: block;
+}
+
+@media(max-width: 520px){
+  #chatbot-toggler{
+    right: 20px;
+    bottom: 20px
+  }
+
+  .chatbot-popup{
+    right: 0;
+    bottom: 100px;
+    height: calc(100% - 100px);
+    border-radius: 0;
+    width: 100%
+  }
+
+  .chatbot-popup .chat-header{
+    padding: 12px 15px
+  }
+
+  .chat-body{
+    height: calc(90% - 55px);
+    padding: 25px 15px
+  }
+
+  .chat-footer{
+    padding: 10px 15px 15px
+  }
 }

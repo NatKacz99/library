@@ -13,9 +13,10 @@ import Footer from './../Footer/Footer';
 import Contact from './../Contact/Contact';
 import ProtectedRoute from './../ProtectedRoute/ProtectedRoute';
 import { UserContext } from './../../contexts/UserContext';
-import ChatbotIcon from "./../ChatbotIcon";
-import ChatForm from "./../ChatForm";
-import ChatMessage from "./../ChatMessage";
+import ChatbotIcon from "./../Chatbot/ChatbotIcon";
+import ChatForm from "./../Chatbot/ChatForm";
+import ChatMessage from "./../Chatbot/ChatMessage";
+import {booksInfo} from "./../booksInfoForChat";
 import { useDebounce } from '../../hooks/useDebounce';
 import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
 
@@ -25,7 +26,12 @@ function App() {
   const [genres, setGenres] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [chatHistory, setChatHistory] = useState([]);
+  const [chatHistory, setChatHistory] = useState([{
+    hideInChat: true,
+    role: 'model',
+    text: booksInfo
+  }]);
+  const [showChatbot, setShowChatbot] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [lastRequestTime, setLastRequestTime] = useState(0);
 
@@ -121,7 +127,7 @@ function App() {
   };
 
   useEffect(() => {
-    chatBodyRef.current.scrollTo({top: chatBodyRef.current.scrollHeight, behavior: "smooth"})
+    chatBodyRef.current.scrollTo({ top: chatBodyRef.current.scrollHeight, behavior: "smooth" })
   }, [chatHistory])
 
   return (
@@ -162,13 +168,26 @@ function App() {
           <Route path="/contact" element={<Contact />} />
         </Routes>
 
-        <div className="chatbot-popup">
+        <button
+          onClick={() => setShowChatbot(prev => !prev)}
+          id="chatbot-toggler"
+        >
+          <span className="material-symbols-rounded">
+            {showChatbot ? 'close' : 'mode_comment'}
+          </span>
+        </button>
+
+        {/* Chatbot Popup - show when only showChatbot = true */}
+        <div className={`chatbot-popup ${showChatbot ? 'show-chatbot' : ''}`}>
           <div className="chat-header">
             <div className="header-info">
               <ChatbotIcon />
               <h2 className="logo-text">Chatbot</h2>
             </div>
-            <button className="material-symbols-rounded">
+            <button
+              className="material-symbols-rounded"
+              onClick={() => setShowChatbot(false)}
+            >
               keyboard_arrow_down
             </button>
           </div>
@@ -188,7 +207,11 @@ function App() {
           </div>
 
           <div className="chat-footer">
-            <ChatForm chatHistory={chatHistory} setChatHistory={setChatHistory} generateBotResponse={generateBotResponse} />
+            <ChatForm
+              chatHistory={chatHistory}
+              setChatHistory={setChatHistory}
+              generateBotResponse={generateBotResponse}
+            />
           </div>
         </div>
       </div>
