@@ -31,7 +31,8 @@ body {
   background: #6D4FC2;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease
+  transition: all 0.2s ease;
+  z-index: 10001
 }
 
 #chatbot-toggler span {
@@ -58,13 +59,15 @@ body {
   transform-origin: bottom right;
   box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0.1),
     0 32px 64px -48px rgba(0, 0, 0, 0.5);
-  transition: all 0.1s ease
+  transition: all 0.1s ease;
+  z-index: 10000;
 }
 
 .chatbot-popup.show-chatbot {
   opacity: 1;
   transform: scale(1);
   pointer-events: auto;
+  z-index: 10000;
 }
 
 .chatbot-popup .chat-header {
@@ -151,7 +154,8 @@ body {
   max-width: 75%;
   word-wrap: break-word;
   white-space: pre-line;
-  font-size: 0.95rem
+  font-size: 0.95rem;
+  text-align: left;
 }
 
 .chat-body .bot-message .message-text {
