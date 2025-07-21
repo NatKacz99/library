@@ -33,20 +33,18 @@ function App() {
     text: booksInfo
   }]);
   const [showChatbot, setShowChatbot] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [lastRequestTime, setLastRequestTime] = useState(0);
 
   const { user } = useContext(UserContext);
 
   const chatBodyRef = useRef();
 
   useEffect(() => {
-    fetch("http://localhost:3000/")
+    fetch("http://[2a01:4f8:c013:c304::1]:3000/")
       .then((res) => res.json())
       .then((data) => setBooks(data))
       .catch((err) => console.error("Error:", err));
 
-    fetch("http://localhost:3000/genres")
+    fetch("http://[2a01:4f8:c013:c304::1]:3000/genres")
       .then((res) => res.json())
       .then((data) => setGenres(data))
       .catch((err) => console.error("Error while retrieving species: ", err));
@@ -54,7 +52,7 @@ function App() {
 
   const fetchBooks = async (term) => {
     try {
-      const response = await fetch(`http://localhost:3000/books?search=${term}`);
+      const response = await fetch(`http://[2a01:4f8:c013:c304::1]:3000/books?search=${term}`);
       const data = await response.json();
       setBooks(data);
     } catch (err) {
