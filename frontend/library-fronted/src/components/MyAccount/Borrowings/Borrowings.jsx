@@ -21,7 +21,7 @@ function Borrowings() {
       const parsedUser = JSON.parse(storedUser);
       setFormData({ name: parsedUser.name, email: parsedUser.email });
 
-      fetch(`http://[2a01:4f8:c013:c304::1]:3000/my-borrowings/${parsedUser.id}`)
+      fetch(`http://116.202.101.142:3000/my-borrowings/${parsedUser.id}`)
         .then((res) => {
           if (!res.ok) throw new Error('Failed to fetch rentals');
           return res.json();
@@ -35,7 +35,7 @@ function Borrowings() {
           setLoadingRentals(false);
         });
 
-      fetch(`http://[2a01:4f8:c013:c304::1]:3000/my-borrowings/order/${parsedUser.id}`)
+      fetch(`http://116.202.101.142:3000/my-borrowings/order/${parsedUser.id}`)
         .then((res) => {
           if (!res.ok) throw new Error('Failed to fetch order');
           return res.json();

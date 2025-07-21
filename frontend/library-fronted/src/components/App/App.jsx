@@ -39,12 +39,12 @@ function App() {
   const chatBodyRef = useRef();
 
   useEffect(() => {
-    fetch("http://[2a01:4f8:c013:c304::1]:3000/")
+    fetch("http://116.202.101.142:3000/")
       .then((res) => res.json())
       .then((data) => setBooks(data))
       .catch((err) => console.error("Error:", err));
 
-    fetch("http://[2a01:4f8:c013:c304::1]:3000/genres")
+    fetch("http://116.202.101.142:3000/genres")
       .then((res) => res.json())
       .then((data) => setGenres(data))
       .catch((err) => console.error("Error while retrieving species: ", err));
@@ -52,7 +52,7 @@ function App() {
 
   const fetchBooks = async (term) => {
     try {
-      const response = await fetch(`http://[2a01:4f8:c013:c304::1]:3000/books?search=${term}`);
+      const response = await fetch(`http://116.202.101.142:3000/books?search=${term}`);
       const data = await response.json();
       setBooks(data);
     } catch (err) {

@@ -34,7 +34,7 @@ function PersonalData() {
     if (formData.password) payloadEditDataForm.password = formData.password;
 
     try {
-      const response = await fetch(`http://[2a01:4f8:c013:c304::1]:3000/my-data/updatePersonalData/${user.id}`, {
+      const response = await fetch(`http://116.202.101.142:3000/my-data/updatePersonalData/${user.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payloadEditDataForm)
@@ -66,7 +66,7 @@ function PersonalData() {
     if (!window.confirm("Are you sure you want to delete your account? This action is irreversible.")) return;
 
     try {
-      const response = await fetch(`http://[2a01:4f8:c013:c304::1]:3000/my-data/delete-account/${user.id}`, {
+      const response = await fetch(`http://116.202.101.142:3000/my-data/delete-account/${user.id}`, {
         method: 'DELETE'
       });
 

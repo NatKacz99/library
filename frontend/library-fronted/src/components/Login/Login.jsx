@@ -17,7 +17,7 @@ function Login({ setToken }) {
     e.preventDefault();
     
     try {
-      const response = await fetch("http://[2a01:4f8:c013:c304::1]:3000/login", {
+      const response = await fetch("http://116.202.101.142:3000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -84,7 +84,7 @@ function Login({ setToken }) {
 
           <div className="mt-2">
             <div className="card-body text-center">
-              <a className="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2" href="http://[2a01:4f8:c013:c304::1]:3000/auth/google" role="button">
+              <a className="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2" href="http://116.202.101.142:3000/auth/google" role="button">
                 <i className="fab fa-google"></i>
                 Sign In with Google
               </a>

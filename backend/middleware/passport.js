@@ -37,7 +37,7 @@ passport.use(
 passport.use("google", new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: "http://[2a01:4f8:c013:c304::1]:3000/auth/google/callback",
+  callbackURL: "http://116.202.101.142:3000/auth/google/callback",
   userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
 }, async (accessToken, refreshToken, profile, cb) => {
   console.log(profile);
