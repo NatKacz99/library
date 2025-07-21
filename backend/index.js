@@ -29,7 +29,7 @@ app.use(express.json({limit: '1mb'}));
 app.use(sanitizeMiddleware);
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: 'http://2a01:4f8:c013:c304::1:5173',
   credentials: true
 }));
 
@@ -68,6 +68,6 @@ app.use("/", booksBorrowingsRoutes);
 
 app.use("/", userRoutes);
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server running on http://0.0.0.0:${port}`);
 });
