@@ -29,7 +29,7 @@ app.use(express.json({limit: '1mb'}));
 app.use(sanitizeMiddleware);
 
 app.use(cors({
-  origin: 'http://116.202.101.142:5173',
+  origin: 'http://localhost:5173',
   credentials: true
 }));
 

@@ -10,7 +10,7 @@ function BookDetails() {
   const [messageType, setMessageType] = useState('');
 
   useEffect(() => {
-    fetch(`http://116.202.101.142:3000/api/books/${isbn}`)
+    fetch(`http://localhost:3000/api/books/${isbn}`)
       .then((res) => res.json())
       .then((data) => {
         console.log("Fetched book:", data);
@@ -42,7 +42,7 @@ function BookDetails() {
       return;
     }
 
-    const responseBorrowing = await fetch(`http://116.202.101.142:3000/details/borrow/${isbn}`, {
+    const responseBorrowing = await fetch(`http://localhost:3000/details/borrow/${isbn}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ function BookDetails() {
       setMessage("Book successfully checked out!");
       setMessageType("successful");
 
-      fetch(`http://116.202.101.142:3000/api/books/${isbn}`)
+      fetch(`http://localhost:3000/api/books/${isbn}`)
         .then(res => res.json())
         .then(data => setBook(data))
         .catch(error => console.error("Error updating book info:", error));
@@ -86,7 +86,7 @@ function BookDetails() {
       return;
     }
 
-    const responseOrder = await fetch(`http://116.202.101.142:3000/details/order/${isbn}`, {
+    const responseOrder = await fetch(`http://localhost:3000/details/order/${isbn}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

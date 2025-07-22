@@ -10,7 +10,7 @@ export async function checkBookOut(req, res) {
   }
 
   try {
-    userId = sanitizeUserId(userId);
+    const sanitizedUserId = sanitizeUserId(userId);
     //ISBN format validation
     if (!/^(97[89])?\d{9}(\d|X)$/i.test(isbn)) {
       return res.status(400).json({ 
@@ -48,7 +48,7 @@ export async function checkBookOut(req, res) {
 
     const existingLoan = await db.query(
       'SELECT id FROM loans WHERE isbn = $1 AND user_id = $2 AND return_at > NOW()',
-      [isbn, userId]
+      [isbn, sanitizedUserId]
     );
 
     if (existingLoan.rows.length > 0) {
@@ -62,7 +62,7 @@ export async function checkBookOut(req, res) {
 
     await db.query(
       `INSERT INTO loans (isbn, user_id, return_at)
-        VALUES ($1, $2, $3)`, [isbn, userId, returnAt.toISOString()]
+        VALUES ($1, $2, $3)`, [isbn, sanitizedUserId, returnAt.toISOString()]
     )
 
     await db.query(
