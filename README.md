@@ -1,0 +1,5 @@
+![strona_główna1](https://github.com/user-attachments/assets/adf63a5a-a1a5-4a35-bc2b-b1b9b40237c1)
+![strona_główna2](https://github.com/user-attachments/assets/6540e787-a3f4-4eb9-8a3f-42f975eab73d)
+![opis_książki](https://github.com/user-attachments/assets/af83a38b-c24f-47ed-8225-9070640a83d1)
+![chatbot](https://github.com/user-attachments/assets/cb13ea6d-84fe-432b-806b-b43c80a39b20)
+![wypożyczenia](https://github.com/user-attachments/assets/7741a20a-092f-473f-afb7-1566dec9b441)
